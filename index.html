@@ -1,0 +1,1261 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="INDUSTRIAS HALHUM COR - Fabricantes de maquinaria agrícola de alta calidad">
+    <meta name="keywords" content="maquinaria agrícola, tractores, cosechadoras, equipos agrícolas, fabricación maquinaria">
+    <title>INDUSTRIAS HALHUM COR - Maquinaria Agrícola</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css" />
+    <style>
+        /* Estilos CSS - Tema Azul Industrial */
+        :root {
+            --primary-color: #0a2463;
+            --secondary-color: #3e92cc;
+            --dark-color: #051336;
+            --light-color: #f5f9ff;
+            --accent-color: #1a4b8c;
+            --text-color: #333;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            color: var(--text-color);
+            line-height: 1.6;
+            background-color: #f9f9f9;
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 15px;
+        }
+        
+        /* Header */
+        header {
+            background-color: white;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo img {
+            height: 50px;
+            margin-right: 10px;
+        }
+        
+        .logo h1 {
+            color: var(--primary-color);
+            font-size: 0.7rem;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+        }
+        
+        nav ul li {
+            margin-left: 20px;
+        }
+        
+        nav ul li a {
+            text-decoration: none;
+            color: var(--text-color);
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            color: var(--primary-color);
+        }
+        
+        .mobile-menu {
+            display: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+        }
+        
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(rgba(10, 36, 99, 0.8), rgba(10, 36, 99, 0.8)), url('img/fondo web.webp') no-repeat center center/cover;
+            height: 80vh;
+            display: flex;
+            align-items: center;
+            text-align: center;
+            color: white;
+            margin-top: 80px;
+        }
+        
+        .hero-content {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        .hero h2 {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 12px 30px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Secciones */
+        section {
+            padding: 80px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 50px;
+            color: var(--primary-color);
+            position: relative;
+        }
+        
+        .section-title::after {
+            content: '';
+            display: block;
+            width: 80px;
+            height: 4px;
+            background-color: var(--secondary-color);
+            margin: 15px auto 0;
+        }
+        
+        /* Sobre Nosotros */
+        .about {
+            background-color: var(--light-color);
+        }
+        
+        .about-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+        }
+        
+        .about-img img {
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Servicios */
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .service-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s;
+        }
+        
+        .service-card:hover {
+            transform: translateY(-10px);
+        }
+        
+        .service-img {
+            height: 200px;
+            overflow: hidden;
+        }
+        
+        .service-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .service-card:hover .service-img img {
+            transform: scale(1.1);
+        }
+        
+        .service-content {
+            padding: 20px;
+        }
+        
+        .service-content h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        /* Productos */
+        .products {
+            background-color: var(--light-color);
+        }
+        
+        .products-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+        }
+        
+        .product-card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        .product-img {
+            height: 250px;
+            overflow: hidden;
+        }
+        
+        .product-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .product-info {
+            padding: 20px;
+        }
+        
+        .product-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+        
+        .price {
+            font-weight: bold;
+            color: var(--secondary-color);
+            font-size: 1.2rem;
+            margin: 10px 0;
+        }
+        
+        /* Promociones */
+        .promo-banner {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .promo-banner h3 {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+        }
+        
+        /* Galería */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap:10px;
+        }
+        
+        .gallery-item {
+            height: 300px;
+            overflow: hidden;
+            border-radius: 5px;
+            position: relative;
+        }
+        
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+        
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
+        
+        /* Contacto */
+        .contact {
+            background-color: var(--light-color);
+        }
+        
+        .contact-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+        }
+        
+        .contact-info h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+        
+        .contact-info p {
+            margin-bottom: 15px;
+        }
+        
+        .contact-info i {
+            color: var(--primary-color);
+            margin-right: 10px;
+        }
+        
+        .contact-form input,
+        .contact-form textarea,
+        .contact-form select {
+            width: 100%;
+            padding: 12px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        
+        .contact-form textarea {
+            height: 150px;
+        }
+        
+        /* Footer */
+        footer {
+            background-color: var(--dark-color);
+            color: white;
+            padding: 50px 0 20px;
+        }
+        
+        .footer-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .footer-col h3 {
+            margin-bottom: 20px;
+            font-size: 1.2rem;
+        }
+        
+        .footer-col ul {
+            list-style: none;
+        }
+        
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+        
+        .footer-col ul li a {
+            color: #ddd;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-col ul li a:hover {
+            color: var(--secondary-color);
+        }
+        
+        .social-links a {
+            display: inline-block;
+            color: white;
+            background-color: rgba(255, 255, 255, 0.1);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 40px;
+            margin-right: 10px;
+            transition: background-color 0.3s;
+        }
+        
+        .social-links a:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        /* Mapa de Ubicación */
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 30px;
+        }
+        
+        /* ESTILOS PARA EL MENÚ LATERAL DE FICHAS TÉCNICAS */
+        .tech-specs-sidebar {
+            position: fixed;
+            top: 150px;
+            right: 20px;
+            width: 300px;
+            background: var(--primary-color);
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            z-index: 900;
+            color: white;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-specs-header {
+            padding: 15px;
+            background: var(--accent-color);
+            border-radius: 8px 8px 0 0;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .tech-specs-header h3 {
+            margin: 0;
+            font-size: 1.1rem;
+        }
+        
+        .tech-specs-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+        
+        .tech-specs-content.active {
+            max-height: 500px;
+            overflow-y: auto;
+        }
+        
+        .tech-specs-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .tech-specs-list li {
+            padding: 12px 15px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            transition: background 0.2s;
+            cursor: pointer;
+        }
+        
+        .tech-specs-list li:hover {
+            background: rgba(255,255,255,0.1);
+        }
+        
+        .tech-specs-list li i {
+            margin-right: 10px;
+            color: var(--secondary-color);
+        }
+        
+        .pdf-viewer-container {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 80%;
+            height: 80vh;
+            background: white;
+            z-index: 1000;
+            box-shadow: 0 0 20px rgba(0,0,0,0.3);
+            border-radius: 8px;
+            display: none;
+        }
+        
+        .pdf-viewer-header {
+            padding: 15px;
+            background: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-radius: 8px 8px 0 0;
+        }
+        
+        .pdf-viewer-header h4 {
+            margin: 0;
+        }
+        
+        .close-pdf {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.2rem;
+            cursor: pointer;
+        }
+        
+        .pdf-viewer-iframe {
+            width: 100%;
+            height: calc(100% - 50px);
+            border: none;
+            border-radius: 0 0 8px 8px;
+        }
+        
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 999;
+            display: none;
+        }
+        
+        /* Chat Widget */
+        .chat-widget {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 900;
+        }
+        
+        .chat-button {
+            width: 60px;
+            height: 60px;
+            background-color: var(--secondary-color);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+            transition: all 0.3s;
+        }
+        
+        .chat-button:hover {
+            background-color: var(--accent-color);
+            transform: scale(1.1);
+        }
+        
+        .chat-button i {
+            color: white;
+            font-size: 1.5rem;
+        }
+        
+        .chat-box {
+            position: absolute;
+            bottom: 80px;
+            right: 0;
+            width: 350px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+            overflow: hidden;
+            display: none;
+        }
+        
+        .chat-header {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 15px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .chat-header h4 {
+            margin: 0;
+        }
+        
+        .close-chat {
+            background: none;
+            border: none;
+            color: white;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+        
+        .chat-body {
+            height: 300px;
+            padding: 15px;
+            overflow-y: auto;
+        }
+        
+        .chat-message {
+            margin-bottom: 15px;
+            max-width: 80%;
+        }
+        
+        .received {
+            align-self: flex-start;
+            background-color: #f1f1f1;
+            padding: 10px;
+            border-radius: 10px 10px 10px 0;
+        }
+        
+        .sent {
+            align-self: flex-end;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 10px;
+            margin-left: auto;
+        }
+        
+        .chat-input {
+            display: flex;
+            padding: 10px;
+            border-top: 1px solid #eee;
+        }
+        
+        .chat-input input {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px 0 0 5px;
+            outline: none;
+        }
+        
+        .chat-input button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            padding: 0 15px;
+            border-radius: 0 5px 5px 0;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        
+        .chat-input button:hover {
+            background-color: var(--accent-color);
+        }
+        
+        /* Responsive */
+        @media (max-width: 992px) {
+            .about-content,
+            .contact-container {
+                grid-template-columns: 1fr;
+            }
+            
+            .about-img {
+                order: -1;
+            }
+            
+            .tech-specs-sidebar {
+                width: 250px;
+                right: 10px;
+            }
+            
+            .pdf-viewer-container {
+                width: 95%;
+                height: 70vh;
+            }
+            
+            .chat-box {
+                width: 300px;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            nav ul {
+                display: none;
+                position: absolute;
+                top: 80px;
+                left: 0;
+                width: 100%;
+                background-color: white;
+                flex-direction: column;
+                padding: 20px 0;
+                box-shadow: 0 5px 10px rgba(0, 0, 0, 0.1);
+            }
+            
+            nav ul.show {
+                display: flex;
+            }
+            
+            nav ul li {
+                margin: 0;
+                text-align: center;
+                padding: 10px 0;
+            }
+            
+            .mobile-menu {
+                display: block;
+            }
+            
+            .hero h2 {
+                font-size: 2rem;
+            }
+            
+            .hero p {
+                font-size: 1rem;
+            }
+            
+            .tech-specs-sidebar {
+                width: 100%;
+                right: 0;
+                top: auto;
+                bottom: 0;
+                border-radius: 8px 8px 0 0;
+            }
+            
+            .tech-specs-content.active {
+                max-height: 300px;
+            }
+            
+            .chat-widget {
+                bottom: 20px;
+                right: 20px;
+            }
+            
+            .chat-button {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .chat-box {
+                width: 280px;
+                bottom: 70px;
+            }
+        }
+        
+        @media (max-width: 576px) {
+            .chat-box {
+                width: 100%;
+                right: -20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+ 
+                <img src="img/logo.png" alt="Logo Industriales Halhum">
+ 
+                <h1>Fabricantes de maquinaria agrícola e industrial de alta calidad</h1>
+            </div>
+            <nav>
+                <div class="mobile-menu">
+                    <i class="fas fa-bars"></i>
+                </div>
+                <ul id="nav-menu">
+                    <li><a href="#inicio">Inicio</a></li>
+                    <li><a href="#nosotros">Nosotros</a></li>
+                    <li><a href="#servicios">Servicios</a></li>
+                    <li><a href="#productos">Productos</a></li>
+                    <li><a href="#novedades">Novedades</a></li>
+                    <li><a href="#galeria">Galería</a></li>
+                    <li><a href="#ubicacion">Ubicación</a></li>
+                    <li><a href="#contacto">Contacto</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero" id="inicio">
+        <div class="hero-content">
+            <h2>Maquinaria Agrícola Industrial de Alto Rendimiento</h2>
+            <p>Fabricamos equipos agrícolas duraderos y eficientes con tecnología de punta para potenciar tu producción</p>
+            <a href="#contacto" class="btn">Contáctanos</a>
+        </div>
+    </section>
+
+    <!-- Sobre Nosotros -->
+    <section class="about" id="nosotros">
+        <div class="container">
+            <h2 class="section-title">Sobre Nosotros</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <p>INDUSTRIAS HALHUM COR es una empresa líder en el diseño y fabricación de maquinaria agrícola industrial. Con más de 10 años de experiencia en el sector, hemos desarrollado soluciones innovadoras para los desafíos del campo moderno y de la industria.</p>
+                    <p>Nuestro equipo de ingenieros altamente capacitados trabaja constantemente en el desarrollo de nuevas tecnologías que mejoren el rendimiento y reduzcan los costos operativos de nuestros clientes.</p>
+                    <p>Trabajamos con  calidad y nuestros procesos de fabricación cumplen con los más altos estándares industriales.</p>
+                </div>
+                <div class="about-img">
+                    <img src="img/nosotros.webp" alt="Fábrica INDUSTRIAS HALHUM COR">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Servicios -->
+    <section class="services" id="servicios">
+        <div class="container">
+            <h2 class="section-title">Nuestros Servicios</h2>
+            <div class="services-grid">
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="img/diseño.webp" alt="Diseño de Maquinaria">
+                    </div>
+                    <div class="service-content">
+                        <h3>Ingeniería Personalizada</h3>
+                        <p>Diseñamos maquinaria adaptada a las necesidades específicas de tu operación agrícola, considerando tipo de cultivo, terreno y capacidad productiva.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="img/mantenimiento.webp" alt="Mantenimiento">
+                    </div>
+                    <div class="service-content">
+                        <h3>Mantenimiento Industrial</h3>
+                        <p>Servicio técnico especializado para todas nuestras máquinas, con planes de mantenimiento predictivo que maximizan la vida útil del equipo.</p>
+                    </div>
+                </div>
+                <div class="service-card">
+                    <div class="service-img">
+                        <img src="img/repuestos.webp" alt="Mantenimiento">
+                    </div>
+                    <div class="service-content">
+                        <h3>Suministro de Repuestos</h3>
+                        <p>Amplio stock de componentes originales para todas nuestras líneas de productos, con entrega inmediata y garantía de calidad industrial.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Productos -->
+    <section class="products" id="productos">
+        <div class="container">
+            <h2 class="section-title">Nuestros Productos</h2>
+            <div class="products-grid">
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="img/rastrillo-levante.webp" alt="rastrillo de levante">
+                    </div>
+                    <div class="product-info">
+                        <h3>Rastrillo de levante hidraulico</h3>
+                        <p>Implemento de discos paralabranza primaria.Labranza más uniforme.Fácil operación.</p>
+                        <div class="price">$17,000,000</div>
+                        <a href="#contacto" class="btn">Consultar</a>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="img/cosechadora.webp" alt="Cosechadora">
+                    </div>
+                    <div class="product-info">
+                        <h3>Cosechadora de papa</h3>
+                        <p>Cosechadora autopropulsada con sistema de limpieza de última generación.</p>
+                        <div class="price">$32,000,000</div>
+                        <a href="#contacto" class="btn">Consultar</a>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="img/renovador.webp" alt="renovador de peadera">
+                    </div>
+                    <div class="product-info">
+                        <h3>renovador de praderas</h3>
+                        <p>El renovador de praderas es una herramienta agrícola diseñada para la descompactación y oxigenación de los suelos dedicados a la ganadería sin arrancar los pastos implantados.</p>
+                        <div class="price">$12,000,000</div>
+                        <a href="#contacto" class="btn">Consultar</a>
+                    </div>
+                </div>
+                <div class="product-card">
+                    <div class="product-img">
+                        <img src="img/rastra-tiro.webp" alt="rastra">
+                    </div>
+                    <div class="product-info">
+                        <h3>rastra</h3>
+                        <p>La Rastra de Discos Halhum ha sido diseñada para un eficiente labrado de tierras, este se logra gracias a su peso y a la incorporación de discos dentados en ambos cuerpos.</p>
+                        <div class="price">$12,000,000</div>
+                        <a href="#contacto" class="btn">Consultar</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Promociones -->
+    <section class="promotions" id="promociones">
+        <div class="container">
+            <h2 class="section-title">Novedades</h2>
+            <div class="promo-banner">
+                <h3>Otros servicios</h3>
+                <p> Soldaduras especiales, servicio de torno y fresadora, corte CNC plasma y oxicorte, venta de lamina en todos los calibre.</p>
+                <p>Solicita nuestro portafolio</p>
+            </div>
+            <div class="promo-banner" style="background-color: var(--secondary-color);">
+                <h3>Tambien fabricamos Maquinaria industrial</h3>
+                <p>Zaranda vibratoria, hormigoneras, mezcladoras, trituradoras.</p>
+                <p>Garantizamos mantenimiento y capacitación operativa.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Galería -->
+    <section class="gallery" id="galeria">
+        <div class="container">
+            <h2 class="section-title">Galería Industrial</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549330788.webp" alt="Maquinaria en campo">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549335976.webp" alt="Trabajando con tractor">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549341877.webp" alt="Taller de mantenimiento">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549344538.webp" alt="Exhibición de maquinaria">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549347529.webp" alt="Equipo HALHUM">
+                </div>
+                <div class="gallery-item">
+                    <img src="img/FB_IMG_1748549350704.webp" alt="Cosecha con maquinaria HALHUM">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Ubicación -->
+    <section class="location" id="ubicacion">
+        <div class="container">
+            <h2 class="section-title">Nuestra Ubicación</h2>
+            <div class="about-content">
+                <div class="about-text">
+                    <h3>Planta Industrial HALHUM</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Variante Oriente Km 0.5 corregimiento de Catambuco, Pasto, Nariño, Colombia</p>
+                    <p><i class="fas fa-phone"></i> +57 3016491591</p>
+                    <p><i class="fas fa-clock"></i> Lunes a Viernes: 8:00 AM - 6:00 PM</p>
+                    <p><i class="fas fa-clock"></i> Sábados: 8:00 AM - 12:00 PM</p>
+                    <p>Nuestra planta de producción cuenta con 5,000 m² de instalaciones modernas y equipadas con tecnología de punta para la fabricación de maquinaria agrícola industrial.</p>
+                </div>
+                <div class="about-img">
+                    <div id="map"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contacto -->
+    <section class="contact" id="contacto">
+        <div class="container">
+            <h2 class="section-title">Contacto</h2>
+            <div class="contact-container">
+                <div class="contact-info">
+                    <h3>Información de Contacto Industrial</h3>
+                    <p><i class="fas fa-map-marker-alt"></i> Variante Oriente Km 0.5 corregimiento de Catambuco. Pasto, Nariño, Colombia</p>
+                    <p><i class="fas fa-phone"></i> +57 3016491591</p>
+                    <p><i class="fas fa-envelope"></i> industriashalhumcor15@gmail.com</p>
+                    <p><i class="fas fa-clock"></i> Lunes a Viernes: 8:00 - 18:00</p>
+                    <p><i class="fas fa-clock"></i> Sábados: 8:00 - 12:00</p>
+                    
+                    <h3 style="margin-top: 30px;">Síguenos</h3>
+                    <div class="social-links">
+                        <a href="#"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#"><i class="fab fa-instagram"></i></a>
+                        <a href="#"><i class="fab fa-linkedin-in"></i></a>
+                        <a href="#"><i class="fab fa-youtube"></i></a>
+                    </div>
+                </div>
+                <div class="contact-form">
+                    <form id="form-contacto">
+                        <input type="text" placeholder="Nombre y Apellido" required>
+                        <input type="email" placeholder="Email" required>
+                        <input type="tel" placeholder="Teléfono">
+                        <select required>
+                            <option value="" disabled selected>Seleccione un motivo</option>
+                            <option value="consulta">Consulta General</option>
+                            <option value="producto">Información de Producto</option>
+                            <option value="servicio">Solicitud de Servicio Técnico</option>
+                            <option value="repuesto">Pedido de Repuestos</option>
+                            <option value="cotizacion">Solicitud de Cotización</option>
+                        </select>
+                        <textarea placeholder="Mensaje" required></textarea>
+                        <button type="submit" class="btn">Enviar Mensaje</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-container">
+                <div class="footer-col">
+                    <h3>INDUSTRIAS HALHUM COR</h3>
+                    <p>Fabricantes de maquinaria agrícola industrial con más de 10 años de experiencia en el sector, comprometidos con la innovación y calidad.</p>
+                </div>
+                <div class="footer-col">
+                    <h3>Enlaces Rápidos</h3>
+                    <ul>
+                        <li><a href="#inicio">Inicio</a></li>
+                        <li><a href="#nosotros">Nosotros</a></li>
+                        <li><a href="#servicios">Servicios</a></li>
+                        <li><a href="#productos">Productos</a></li>
+                        <li><a href="#contacto">Contacto</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Productos Industriales</h3>
+                    <ul>
+                        <li><a href="#"rastra">Rastra de tiro</a></li>
+                        <li><a href="#">Cosechadoras de papa</a></li>
+                        <li><a href="#">Rastra de levante hidraulico</a></li>
+                        <li><a href="#">Renovador de praderas</a></li>
+                        <li><a href="#">Trituradoras</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h3>Contacto Industrial</h3>
+                    <ul>
+                        <li><i class="fas fa-map-marker-alt"></i> Variante Oriente Km 0.5 corregimiento de Catambuco. Pasto, Nariño, Colombia</li>
+                        <li><i class="fas fa-phone"></i> +57 3016491591</li>
+                        <li><i class="fas fa-envelope"></i> industriashalhumcor15@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>&copy; 2023 INDUSTRIAS HALHUM COR. Todos los derechos reservados.</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Menú lateral de fichas técnicas -->
+    <div class="tech-specs-sidebar">
+        <div class="tech-specs-header" id="toggleTechSpecs">
+            <h3><i class="fas fa-file-pdf"></i> Fichas Técnicas</h3>
+            <i class="fas fa-chevron-down" id="techSpecsIcon"></i>
+        </div>
+        <div class="tech-specs-content" id="techSpecsContent">
+            <ul class="tech-specs-list">
+                <li onclick="openPdf('fichas/FICHA TÉCNICA RASTRA (1).pdf', 'rastra')">
+                    <i class="fas fa-download"></i> FICHA TÉCNICA RASTRA
+                </li>
+                <li onclick="openPdf('fichas/FICHA TÉCNICA RASTRA DE LEVANTE 2.pdf', 'Rastra de levante')">
+                    <i class="fas fa-download"></i> FICHA TÉCNICA RASTRA DE LEVANTE 2
+                </li>
+                <li onclick="openPdf('fichas/FICHA TÉCNICA RENOVADOR DE PRADERAS NUEVO.pdf', 'renovador')">
+                    <i class="fas fa-download"></i> FICHA TÉCNICA RENOVADOR DE PRADERAS NUEVO
+                </li>
+                <li onclick="openPdf('fichas/sembradora-hals750.pdf', 'TRITURADORA HAL-S750')">
+                    <i class="fas fa-download"></i> TRITURADORA
+                </li>
+                <li onclick="openPdf('fichas/catalogo-general.pdf', 'Catálogo General')">
+                    <i class="fas fa-download"></i> Catálogo General
+                </li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Visor de PDF -->
+    <div class="overlay" id="pdfOverlay"></div>
+    <div class="pdf-viewer-container" id="pdfViewer">
+        <div class="pdf-viewer-header">
+            <h4 id="pdfTitle">Ficha Técnica</h4>
+            <button class="close-pdf" onclick="closePdf()">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+        <iframe class="pdf-viewer-iframe" id="pdfIframe" src=""></iframe>
+    </div>
+
+    <!-- Chat Widget -->
+    <div class="chat-widget">
+        <div class="chat-button" id="chatButton">
+            <i class="fas fa-comments"></i>
+        </div>
+        <div class="chat-box" id="chatBox">
+            <div class="chat-header">
+                <h4>Chat de Soporte</h4>
+                <button class="close-chat" id="closeChat">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="chat-body" id="chatBody">
+                <div class="chat-message received">
+                    <p>¡Hola! Bienvenido a INDUSTRIAS HALHUM COR. ¿En qué podemos ayudarte hoy?</p>
+                </div>
+            </div>
+            <div class="chat-input">
+                <input type="text" id="chatInput" placeholder="Escribe tu mensaje...">
+                <button id="sendMessage"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Menú móvil
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('show');
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-menu').classList.remove('show');
+            });
+        });
+        
+        // Formulario de contacto
+        document.getElementById('form-contacto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por tu mensaje. Nuestro equipo industrial se pondrá en contacto contigo pronto.');
+            this.reset();
+        });
+        
+        // Smooth scrolling para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Control del menú desplegable de fichas técnicas
+        document.getElementById('toggleTechSpecs').addEventListener('click', function() {
+            const content = document.getElementById('techSpecsContent');
+            const icon = document.getElementById('techSpecsIcon');
+            
+            content.classList.toggle('active');
+            
+            if (content.classList.contains('active')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+        
+        // Función para abrir PDF
+        function openPdf(pdfPath, productName) {
+            const pdfViewer = document.getElementById('pdfViewer');
+            const pdfIframe = document.getElementById('pdfIframe');
+            const pdfTitle = document.getElementById('pdfTitle');
+            const overlay = document.getElementById('pdfOverlay');
+            
+            pdfTitle.textContent = `Ficha Técnica - ${productName}`;
+            pdfIframe.src = pdfPath;
+            
+            pdfViewer.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            // Cerrar menú lateral al abrir PDF
+            document.getElementById('techSpecsContent').classList.remove('active');
+            document.getElementById('techSpecsIcon').classList.remove('fa-chevron-up');
+            document.getElementById('techSpecsIcon').classList.add('fa-chevron-down');
+        }
+        
+        // Función para cerrar PDF
+        function closePdf() {
+            document.getElementById('pdfViewer').style.display = 'none';
+            document.getElementById('pdfOverlay').style.display = 'none';
+            document.getElementById('pdfIframe').src = '';
+        }
+        
+        // Cerrar al hacer clic fuera del visor
+        document.getElementById('pdfOverlay').addEventListener('click', closePdf);
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePdf();
+            }
+        });
+        
+        // Chat Widget
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        const closeChat = document.getElementById('closeChat');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        
+        chatButton.addEventListener('click', function() {
+            chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        closeChat.addEventListener('click', function() {
+            chatBox.style.display = 'none';
+        });
+        
+        function addMessage(text, isReceived) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isReceived ? 'received' : 'sent'}`;
+            messageDiv.innerHTML = `<p>${text}</p>`;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        sendMessage.addEventListener('click', function() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, false);
+                chatInput.value = '';
+                
+                // Respuesta automática después de 1 segundo
+                setTimeout(() => {
+                    addMessage('Gracias por tu mensaje. Un asesor industrial se comunicará contigo pronto.', true);
+                }, 1000);
+            }
+        });
+        
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage.click();
+            }
+        });
+        
+        // Mapa de Ubicación
+        function initMap() {
+            // Coordenadas de la ubicación (ejemplo: Bogotá, Colombia)
+            const location = { lat: 1.161562, lng: -77.292288 };
+            const map = L.map('map').setView(location, 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker(location).addTo(map)
+                .bindPopup('INDUSTRIAS HALHUM COR<br>Zona Industrial Varieante oriente km 0.5, Corregimiento de Catambuco, Pasto')
+                .openPopup();
+        }
+        
+        // Inicializar el mapa cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,157 @@
+<!-- JavaScript -->
+    <script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"></script>
+    <script>
+        // Menú móvil
+        document.querySelector('.mobile-menu').addEventListener('click', function() {
+            document.getElementById('nav-menu').classList.toggle('show');
+        });
+        
+        // Cerrar menú al hacer clic en un enlace
+        document.querySelectorAll('#nav-menu a').forEach(link => {
+            link.addEventListener('click', () => {
+                document.getElementById('nav-menu').classList.remove('show');
+            });
+        });
+        
+        // Formulario de contacto
+        document.getElementById('form-contacto').addEventListener('submit', function(e) {
+            e.preventDefault();
+            alert('Gracias por tu mensaje. Nuestro equipo industrial se pondrá en contacto contigo pronto.');
+            this.reset();
+        });
+        
+        // Smooth scrolling para enlaces internos
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                if (targetId === '#') return;
+                
+                const targetElement = document.querySelector(targetId);
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                }
+            });
+        });
+        
+        // Control del menú desplegable de fichas técnicas
+        document.getElementById('toggleTechSpecs').addEventListener('click', function() {
+            const content = document.getElementById('techSpecsContent');
+            const icon = document.getElementById('techSpecsIcon');
+            
+            content.classList.toggle('active');
+            
+            if (content.classList.contains('active')) {
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        });
+        
+        // Función para abrir PDF
+        function openPdf(pdfPath, productName) {
+            const pdfViewer = document.getElementById('pdfViewer');
+            const pdfIframe = document.getElementById('pdfIframe');
+            const pdfTitle = document.getElementById('pdfTitle');
+            const overlay = document.getElementById('pdfOverlay');
+            
+            pdfTitle.textContent = `Ficha Técnica - ${productName}`;
+            pdfIframe.src = pdfPath;
+            
+            pdfViewer.style.display = 'block';
+            overlay.style.display = 'block';
+            
+            // Cerrar menú lateral al abrir PDF
+            document.getElementById('techSpecsContent').classList.remove('active');
+            document.getElementById('techSpecsIcon').classList.remove('fa-chevron-up');
+            document.getElementById('techSpecsIcon').classList.add('fa-chevron-down');
+        }
+        
+        // Función para cerrar PDF
+        function closePdf() {
+            document.getElementById('pdfViewer').style.display = 'none';
+            document.getElementById('pdfOverlay').style.display = 'none';
+            document.getElementById('pdfIframe').src = '';
+        }
+        
+        // Cerrar al hacer clic fuera del visor
+        document.getElementById('pdfOverlay').addEventListener('click', closePdf);
+        
+        // Cerrar con tecla ESC
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                closePdf();
+            }
+        });
+        
+        // Chat Widget
+        const chatButton = document.getElementById('chatButton');
+        const chatBox = document.getElementById('chatBox');
+        const closeChat = document.getElementById('closeChat');
+        const chatBody = document.getElementById('chatBody');
+        const chatInput = document.getElementById('chatInput');
+        const sendMessage = document.getElementById('sendMessage');
+        
+        chatButton.addEventListener('click', function() {
+            chatBox.style.display = chatBox.style.display === 'block' ? 'none' : 'block';
+        });
+        
+        closeChat.addEventListener('click', function() {
+            chatBox.style.display = 'none';
+        });
+        
+        function addMessage(text, isReceived) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `chat-message ${isReceived ? 'received' : 'sent'}`;
+            messageDiv.innerHTML = `<p>${text}</p>`;
+            chatBody.appendChild(messageDiv);
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }
+        
+        sendMessage.addEventListener('click', function() {
+            const message = chatInput.value.trim();
+            if (message) {
+                addMessage(message, false);
+                chatInput.value = '';
+                
+                // Respuesta automática después de 1 segundo
+                setTimeout(() => {
+                    addMessage('Gracias por tu mensaje. Un asesor industrial se comunicará contigo pronto.', true);
+                }, 1000);
+            }
+        });
+        
+        chatInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage.click();
+            }
+        });
+        
+        // Mapa de Ubicación
+        function initMap() {
+            // Coordenadas de la ubicación (ejemplo: Bogotá, Colombia)
+            const location = { lat: 1.161562, lng: -77.292288 };
+            const map = L.map('map').setView(location, 15);
+            
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+            }).addTo(map);
+            
+            L.marker(location).addTo(map)
+                .bindPopup('INDUSTRIAS HALHUM COR<br>Zona Industrial Varieante oriente km 0.5, Corregimiento de Catambuco, Pasto')
+                .openPopup();
+        }
+        
+        // Inicializar el mapa cuando el DOM esté cargado
+        document.addEventListener('DOMContentLoaded', function() {
+            initMap();
+        });
+    </script>
+</body>
+</html>
